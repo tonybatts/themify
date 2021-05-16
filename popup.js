@@ -22,30 +22,34 @@ let getColors = () => {
           if (response) {
             const colorArr = JSON.parse(response)
             console.log(colorArr)
-            colorArr.forEach((color) => {
+            colorArr.forEach((color, index) => {
               const wrapper = document.createElement("div")
               const colorBox = document.createElement("div")
               const pWrapper = document.createElement("div")
               const el = document.createElement("p")
-              // const copyEl = document.createElement("img")
 
               wrapper.classList.add("wrapper")
               colorBox.classList.add("color-box")
               pWrapper.classList.add("p-wrapper")
-              // copyEl.classList.add("copy")
               el.classList.add("el")
 
               colorBox.style.backgroundColor = color
               el.textContent = color
-              // copyEl.src = "icons/content_copy.svg"
 
               wrapper.addEventListener("click", () => {
                 const toolTipWrapper = document.createElement("div")
                 const toolTipText = document.createElement("p")
-                toolTipWrapper.classList.add("tool-tip-wrapper")
-                toolTipText.classList.add("tool-tip-text")
+
 
                 toolTipText.textContent = "Copied!"
+
+                if (index === 0) {
+                  toolTipWrapper.classList.add("tool-tip-wrapper-bottom")
+                  toolTipText.classList.add("tool-tip-text-bottom")
+                } else {
+                  toolTipWrapper.classList.add("tool-tip-wrapper")
+                  toolTipText.classList.add("tool-tip-text")
+                }
 
                 toolTipWrapper.appendChild(toolTipText)
                 wrapper.appendChild(toolTipWrapper)
@@ -55,16 +59,17 @@ let getColors = () => {
                 toolTipText.style.opacity = "1"
 
                 setTimeout(() => {
-                  toolTipWrapper.remove()
-                }, 1000);
-
-
+                  toolTipText.classList.add("tool-tip-text__fade-out")
+                  setTimeout(() => {
+                    toolTipWrapper.remove()
+                  }, 500);
+                }, 700);
 
               })
+
               document.querySelector(".popup-container").appendChild(wrapper)
 
               pWrapper.appendChild(el)
-              // pWrapper.appendChild(copyEl)
               wrapper.appendChild(pWrapper)
               wrapper.appendChild(colorBox)
             })
