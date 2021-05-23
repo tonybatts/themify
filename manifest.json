@@ -1,12 +1,13 @@
 {
   "manifest_version": 2,
   "name": "Themify",
-  "version": "1",
+  "version": "2.2",
   "description": "View the colors of a website",
   "short_name": "iew the colors of a website",
   "permissions": [
     "activeTab",
-    "tabs"
+    "tabs",
+    "storage"
   ],
   "background": {
     "scripts": [
