@@ -23,11 +23,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 })
 
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message === 'ready') {
-    sendResponse(JSON.stringify(colorArr))
-  }
-})
+// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+//   if (message === 'ready') {
+//     sendResponse(JSON.stringify(colorArr))
+//   }
+// })
+
+
 
 
 
