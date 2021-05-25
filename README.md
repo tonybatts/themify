@@ -12,3 +12,4 @@ Configure Themify to output whatever your heart desires.
 ## Install
 [View in Chrome Store](https://chrome.google.com/webstore/detail/themify/depilomfokpbdjhmagangenafijekkjc?hl=en&authuser=0)
 
+[Firefox Add-on](https://addons.mozilla.org/en-US/firefox/addon/themify-colors/?utm_source=addons.mozilla.org&utm_medium=referral&utm_content=search)
