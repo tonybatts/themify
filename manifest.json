@@ -1,19 +1,10 @@
 {
   "manifest_version": 2,
   "name": "Themify",
-  "version": "2.2",
+  "version": "2.3",
   "description": "View the colors of a website",
   "short_name": "iew the colors of a website",
-  "permissions": [
-    "activeTab",
-    "tabs",
-    "storage"
-  ],
-  "background": {
-    "scripts": [
-      "background.js"
-    ]
-  },
+  "permissions": ["activeTab", "storage"],
   "browser_action": {
     "default_icon": {
       "16": "icons/icon16.png",
