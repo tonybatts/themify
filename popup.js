@@ -170,7 +170,6 @@ const checkSetting = (colorArr) => {
           chrome.storage.sync.get(["hex2"], (result3) => {
             if (result3.hex2 !== true) {
               if (colorArr) {
-                console.log(colorArr);
                 generateColors();
                 chrome.storage.sync.set({ colors: JSON.stringify(colorArr) });
 
@@ -306,9 +305,7 @@ document.querySelector(".eye-dropper-container").addEventListener("click", (e) =
   chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tab) => {
     chrome.tabs.sendMessage(tab[0].id, "eyedropper", (response) => {
       if (!window.chrome.runtime.lastError) {
-        // window.close();
         if (response) {
-          console.log("response", response);
           const success = document.querySelector(".eye-success");
           success.style.display = "block";
 
@@ -324,10 +321,7 @@ document.querySelector(".eye-dropper-container").addEventListener("click", (e) =
 const updateColors = () => {
   chrome.storage.sync.get(["colors"], (result) => {
     if (result.colors) {
-      console.log(result.colors);
       let colorArr = JSON.parse(result.colors);
-
-      // document.querySelector(".popup-container").textContent = ""
     }
   });
 };
