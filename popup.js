@@ -297,6 +297,30 @@ let slideMenu = () => {
 
 slideMenu();
 
+// EYE DROPPER LISTENER
+document.querySelector(".eye-dropper-container").addEventListener("click", (e) => {
+  if (!window.EyeDropper) {
+    alert("your browser does not support this feature");
+    return;
+  }
+  chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tab) => {
+    chrome.tabs.sendMessage(tab[0].id, "eyedropper", (response) => {
+      if (!window.chrome.runtime.lastError) {
+        // window.close();
+        if (response) {
+          console.log("response", response);
+          const success = document.querySelector(".eye-success");
+          success.style.display = "block";
+
+          setTimeout(() => {
+            success.style.display = "none";
+          }, 1000);
+        }
+      }
+    });
+  });
+});
+
 const updateColors = () => {
   chrome.storage.sync.get(["colors"], (result) => {
     if (result.colors) {
