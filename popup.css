@@ -2,7 +2,7 @@ body {
   margin: 0;
   padding: 0;
   background-color: #202124;
-  font-family: 'Montserrat','Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -12,8 +12,8 @@ body::-webkit-scrollbar {
 
 /* Hide scrollbar for IE, Edge and Firefox */
 body {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,9 +24,9 @@ body {
   .wrapper {
     background-color: #292a2d;
   }
-  
+
   .wrapper:hover {
-    background-color: #35363A;
+    background-color: #35363a;
   }
 
   .color-box {
@@ -35,12 +35,10 @@ body {
 
   .el {
     color: #9aa0a6;
-
   }
 
   .oops {
-  color: #9aa0a6;
-
+    color: #9aa0a6;
   }
 
   .slide-menu {
@@ -56,9 +54,9 @@ body {
   .wrapper {
     background-color: #484b6a !important;
   }
-  
+
   .wrapper:hover {
-    background-color: #5D6088 !important;
+    background-color: #5d6088 !important;
   }
 
   .color-box {
@@ -67,7 +65,6 @@ body {
 
   .el {
     color: #e4e5f1 !important;
-
   }
 
   .oops {
@@ -83,46 +80,64 @@ body {
   }
 
   .context-menu-icon:hover {
-    background-color: #5D6088 !important;
+    background-color: #5d6088 !important;
   }
   .slide-menu {
-  background-color: #5D6088 !important;
-}
+    background-color: #5d6088 !important;
+  }
 }
 
 .popup-container {
-  animation: fadeIn .5s;
-  -webkit-animation: fadeIn .5s;
-  -moz-animation: fadeIn .5s;
-  -o-animation: fadeIn .5s;
-  -ms-animation: fadeIn .5s;
+  animation: fadeIn 0.5s;
+  -webkit-animation: fadeIn 0.5s;
+  -moz-animation: fadeIn 0.5s;
+  -o-animation: fadeIn 0.5s;
+  -ms-animation: fadeIn 0.5s;
 }
 @keyframes fadeIn {
-  0% {opacity:0;}
-  100% {opacity:1;}
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @-moz-keyframes fadeIn {
-  0% {opacity:0;}
-  100% {opacity:1;}
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @-webkit-keyframes fadeIn {
-  0% {opacity:0;}
-  100% {opacity:1;}
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @-o-keyframes fadeIn {
-  0% {opacity:0;}
-  100% {opacity:1;}
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @-ms-keyframes fadeIn {
-  0% {opacity:0;}
-  100% {opacity:1;}
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
-
-
 
 /* Hide scrollbar for Chrome, Safari and Opera */
 .popup-container::-webkit-scrollbar {
@@ -131,8 +146,8 @@ body {
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .popup-container {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 .popup-container {
@@ -153,7 +168,7 @@ body {
 }
 
 .wrapper:hover {
-  background-color: #35363A;
+  background-color: #35363a;
 }
 
 /* HEADER  */
@@ -165,29 +180,29 @@ header {
 }
 
 .themify-logo {
-    height: 34px;
-    margin-left: 10px;
-    margin-top: 2px;
+  height: 34px;
+  margin-left: 10px;
+  margin-top: 2px;
 }
 
 .context-menu-icon {
-    width: 28px;
-    padding: 4px 0;
-    height: 21px;
-    background-image: radial-gradient(circle, #d2d3db 2px, transparent 2px);
-    background-size: 102% 33.33%;
-    /* border-radius: 50%; */
-    transition: .1s linear;
-        position: absolute;
-    top: 3px;
-    right: 0;
-    z-index: 99999999999;
+  width: 28px;
+  padding: 4px 0;
+  height: 21px;
+  background-image: radial-gradient(circle, #d2d3db 2px, transparent 2px);
+  background-size: 102% 33.33%;
+  /* border-radius: 50%; */
+  transition: 0.1s linear;
+  position: absolute;
+  top: 3px;
+  right: 0;
+  z-index: 99999999999;
 }
 
 .context-menu-icon:hover {
-background-color: #35363A;
-cursor: pointer;
-transition: .1s linear;
+  background-color: #35363a;
+  cursor: pointer;
+  transition: 0.1s linear;
 }
 
 /* MENU */
@@ -199,40 +214,65 @@ transition: .1s linear;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, .6);
+  background-color: rgba(0, 0, 0, 0.6);
   z-index: 9;
   opacity: 0;
-  transition: .3s;
+  transition: 0.3s;
   pointer-events: none;
 }
 
 .menu-overlay.show-overlay {
   opacity: 1;
-  transition: .3s;
+  transition: 0.3s;
 }
 
 .slide-menu {
   width: 156px;
-  height: 151px;
+  height: 176px;
   z-index: 999999;
   color: #9aa0a6;
   background-color: #202124;
   position: absolute;
   right: -156px;
   top: 0;
-  transition: .3s ease-in-out
+  transition: 0.3s ease-in-out;
 }
 
-.slide-menu.show  {
+.slide-menu.show {
   right: 0 !important;
-  transition: .3s ease-in-out;
+  transition: 0.3s ease-in-out;
+}
+
+.eye-dropper-container {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  margin-left: 8px;
+}
+
+.eye-dropper {
+  margin-right: 4px;
+  cursor: pointer;
+  width: 18px;
+}
+
+.color-picker {
+  color: #d2d3db;
+}
+
+.eye-success {
+  display: none;
+  color: #d2d3db;
+  width: 13px;
+  margin-left: 5px;
 }
 
 .input-wrapper {
-      margin-left: 6px;
-    line-height: 36px;
-    font-size: 13px;
-    color: #d2d3db;
+  margin-left: 6px;
+  line-height: 36px;
+  font-size: 13px;
+  color: #d2d3db;
 }
 
 label {
@@ -245,11 +285,12 @@ input {
 }
 
 .settings {
-      font-size: 14px;
-    color: #d2d3db;
-    margin-left: 11px;
-    font-weight: 600;
-    text-align: left;
+  font-size: 14px;
+  color: #d2d3db;
+  margin-left: 11px;
+  font-weight: 600;
+  text-align: left;
+  margin-bottom: 18px;
 }
 
 .color-box {
@@ -299,7 +340,7 @@ input {
   visibility: hidden;
   width: 84px;
   background-color: rgb(239, 239, 239);
- 
+
   font-size: 16px;
   color: #616161;
   text-align: center;
@@ -308,7 +349,7 @@ input {
 
   /* Position the tooltip text */
   position: relative;
-      top: -32px;
+  top: -32px;
   z-index: 1;
   bottom: 125%;
   left: 50%;
@@ -317,21 +358,19 @@ input {
   /* Fade in tooltip */
   opacity: 0;
   transition: opacity 0.2s;
-
-  
 }
 
-/* Fade out tooltip */ 
+/* Fade out tooltip */
 .tool-tip-wrapper .tool-tip-text.tool-tip-text__fade-out {
   visibility: hidden !important;
   opacity: 0 !important;
-  transition: visibility 0s .2s, opacity .2s  !important;
+  transition: visibility 0s 0.2s, opacity 0.2s !important;
 }
 
 .tool-tip-wrapper-bottom .tool-tip-text-bottom.tool-tip-text__fade-out {
   visibility: hidden !important;
   opacity: 0 !important;
-  transition: visibility 0s .2s, opacity .2s !important;
+  transition: visibility 0s 0.2s, opacity 0.2s !important;
 }
 
 /* Tooltip arrow */
@@ -357,7 +396,7 @@ input {
   visibility: hidden;
   width: 84px;
   background-color: rgb(239, 239, 239);
- 
+
   font-size: 16px;
   color: #616161;
   text-align: center;
@@ -389,6 +428,3 @@ input {
   border-style: solid;
   border-color: rgb(239, 239, 239) transparent transparent transparent;
 }
-
-
-
