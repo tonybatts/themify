@@ -26,13 +26,13 @@
     "_execute_browser_action": {
       "suggested_key": {
         "default": "Alt+F",
-        "mac": "Ctrl+F"
+        "mac": "Alt+F"
       }
     },
     "eye-dropper": {
       "suggested_key": {
         "default": "Alt+D",
-        "mac": "Ctrl+D"
+        "mac": "Alt+D"
       },
       "description": "Opens eyedropper"
     }
