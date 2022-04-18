@@ -41,12 +41,12 @@ Enter *Themify*
 * Need to grab that color that's in an image? Use Themifys built in Eye Dropper tool.
 
 ### Shortcuts
-Open Themify:
-Default - Alt+F
+Open Themify:<br />
+Default - Alt+F<br />
 Mac - Ctrl+F
 
-Eye Dropper:
-Default - Alt+D
+Eye Dropper:<br />
+Default - Alt+D<br />
 Mac - Ctrl+D
 
 <p align="right">(<a href="#top">back to top</a>)</p>
