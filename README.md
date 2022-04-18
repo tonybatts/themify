@@ -41,11 +41,11 @@ Enter *Themify*
 * Need to grab that color that's in an image? Use Themifys built in Eye Dropper tool.
 
 ### Shortcuts
-Open Themify:<br />
+**Open Themify:**<br />
 Default - Alt+F<br />
 Mac - Ctrl+F
 
-Eye Dropper:<br />
+**Eye Dropper:**<br />
 Default - Alt+D<br />
 Mac - Ctrl+D
 
