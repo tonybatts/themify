@@ -42,10 +42,12 @@ Enter *Themify*
 
 ### Shortcuts
 **Open Themify:**<br />
-Alt+f
+Windows: Alt+f<br />
+Mac: Option+f
 
 **Eye Dropper:**<br />
-Alt+d
+Windows: Alt+d<br />
+Mac: Option+f
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
