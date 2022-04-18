@@ -13,11 +13,9 @@ const activateEyeDropper = () => {
     file: "themizer.js"
   });
 
-  setTimeout(() => {
-    chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tab) => {
-      chrome.tabs.sendMessage(tab[0].id, "eyedropper", (response) => {
-        console.log(response);
-      });
+  chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tab) => {
+    chrome.tabs.sendMessage(tab[0].id, "eyedropper", (response) => {
+      console.log(response);
     });
-  }, 500);
+  });
 };
