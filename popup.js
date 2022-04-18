@@ -306,6 +306,7 @@ document.querySelector(".eye-dropper-container").addEventListener("click", (e) =
     chrome.tabs.sendMessage(tab[0].id, "eyedropper", (response) => {
       if (!window.chrome.runtime.lastError) {
         if (response) {
+          console.log("response", response);
           const success = document.querySelector(".eye-success");
           success.style.display = "block";
 
