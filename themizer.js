@@ -17,42 +17,56 @@ elArr.forEach((el) => {
   }
 });
 
-if (!document.querySelector("themify_2349_idfja")) {
+if (!document.querySelector(".themify_2349_idfja")) {
   const themifyCheck = document.createElement("span");
   themifyCheck.classList.add("themify_2349_idfja");
   document.body.appendChild(themifyCheck);
 
   const copyToClipboard = (str) => {
     const el = document.createElement("textarea");
+    el.classList.add("themizer_copy");
     el.value = str;
     el.setAttribute("readonly", "");
     el.style.position = "absolute";
     el.style.left = "-9999px";
     document.body.appendChild(el);
     el.select();
-    document.execCommand("copy");
+    // document.execCommand("copy");
+
+    navigator.clipboard
+      .writeText(el.value)
+      .then(() => {
+        console.log("Color copied to clipboard...");
+      })
+      .catch((err) => {
+        console.log("Something went wrong", err);
+      });
+
     document.body.removeChild(el);
   };
 
   const eyeDropper = (sendResponse) => {
+    if (!window.EyeDropper) {
+      console.log("Your browser does not support the EyeDropper API");
+      return;
+    }
+
     const eyeDropper = new EyeDropper();
-    const abortController = new AbortController();
 
     eyeDropper
-      .open({ signal: abortController.signal })
+      .open()
       .then((result) => {
         copyToClipboard(result.sRGBHex);
         sendResponse("hello");
       })
       .catch((e) => {
-        console.log(e);
+        console.log("error", e);
       });
-
-    return "eyedropper";
   };
 
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message === "eyedropper") {
+      window.focus();
       eyeDropper(sendResponse);
     }
 
