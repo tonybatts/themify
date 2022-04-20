@@ -47,7 +47,7 @@ Mac: Option+f
 
 **Eye Dropper:**<br />
 Windows: Alt+d<br />
-Mac: Option+f
+Mac: Option+d
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
