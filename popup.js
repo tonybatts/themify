@@ -141,12 +141,12 @@ const storeAndGenerateColorList = (colorArr) => {
         const isColorRGBA = isRGBA(color);
         let shouldAddHashToColorValue = false;
 
-        if (themifySettings.selectedColorType === "hex") {
+        if (themifySettings?.selectedColorType === "hex") {
           const finalColorValue = isColorRGBA ? RGBAToHexA(color) : RGBToHex(color);
           colorArr[index] = finalColorValue;
         }
 
-        if (themifySettings.selectedColorType === "hex2") {
+        if (themifySettings?.selectedColorType === "hex2") {
           const finalColorValue = isColorRGBA ? RGBAToHexA(color) : RGBToHex(color);
           colorArr[index] = finalColorValue.substring(1);
           shouldAddHashToColorValue = true;
@@ -185,8 +185,8 @@ window.onload = getColors();
 
 // configure the settings menu on load
 chrome.storage.sync.get("themifySettings", ({ themifySettings }) => {
-  document.querySelector(`input[name=${themifySettings.selectedColorType ?? "rgb"}]`).checked = true;
-  document.querySelector(`input[name=${themifySettings.selectedColorType ?? "rgb"}]`).disabled = true;
+  document.querySelector(`input[name=${themifySettings?.selectedColorType ?? "rgb"}]`).checked = true;
+  document.querySelector(`input[name=${themifySettings?.selectedColorType ?? "rgb"}]`).disabled = true;
 });
 
 // listeners
