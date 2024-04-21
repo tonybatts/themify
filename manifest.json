@@ -1,11 +1,17 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Themify",
-  "version": "2.52",
+  "version": "3",
   "description": "View the colors of a website",
-  "short_name": "View the colors of a website",
+  "short_name": "iew the colors of a website",
   "permissions": ["activeTab", "storage"],
-  "browser_action": {
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["themizer.js"]
+    }
+  ],
+  "action": {
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
@@ -17,24 +23,5 @@
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
-  },
-  "background": {
-    "scripts": ["background.js"],
-    "persistent": false
-  },
-  "commands": {
-    "_execute_browser_action": {
-      "suggested_key": {
-        "default": "Alt+F",
-        "mac": "Alt+F"
-      }
-    },
-    "eye-dropper": {
-      "suggested_key": {
-        "default": "Alt+D",
-        "mac": "Alt+D"
-      },
-      "description": "Opens eyedropper"
-    }
   }
 }
