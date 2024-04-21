@@ -1,7 +1,4 @@
-chrome.tabs.executeScript({
-  file: "themizer.js"
-});
-
+// color converter utils
 const RGBToHex = (rgb) => {
   let sep = rgb.indexOf(",") > -1 ? "," : " ";
   rgb = rgb.substr(4).split(")")[0].split(sep);
@@ -56,6 +53,7 @@ const RGBAToHexA = (rgba) => {
   return "#" + r + g + b + a;
 };
 
+// copy to the users clipboard
 const copyToClipboard = (str) => {
   const el = document.createElement("textarea");
   el.value = str;
@@ -68,176 +66,107 @@ const copyToClipboard = (str) => {
   document.body.removeChild(el);
 };
 
-const setting = {
-  rgb: true,
-  hex: false,
-  hex2: false
-};
-
-const setSetting = ({ rgb, hex, hex2 }) => {
-  if (rgb === true) {
-    chrome.storage.sync.set({ rgb: true });
-  } else {
-    chrome.storage.sync.set({ rgb: false });
-  }
-
-  if (hex === true) {
-    chrome.storage.sync.set({ hex: true });
-  } else {
-    chrome.storage.sync.set({ hex: false });
-  }
-
-  if (hex2 === true) {
-    chrome.storage.sync.set({ hex2: true });
-  } else {
-    chrome.storage.sync.set({ hex2: false });
-  }
-
-  if (!rgb && !hex && !hex2) {
-    chrome.storage.sync.set({ rgb: true });
-  }
-};
-
-const checkColorValue = (color) => {
-  values = color.split(",");
+const isRGBA = (color) => {
+  const values = color.split(",");
   if (values.length === 4) {
     return "rgba";
   }
 };
 
-const checkSetting = (colorArr) => {
-  const generateColors = (hex) => {
-    colorArr.forEach((color, index) => {
-      // console.log(color)
-      const wrapper = document.createElement("div");
-      const colorBox = document.createElement("div");
-      const pWrapper = document.createElement("div");
-      const el = document.createElement("p");
+const generateColorList = (colorArr, shouldAddHashToColorValue) => {
+  // clear out the old list
+  document.querySelector(".popup-container").innerHTML = "";
+  // generate the new list
+  colorArr.forEach((color, index) => {
+    const wrapper = document.createElement("div");
+    const colorBox = document.createElement("div");
+    const pWrapper = document.createElement("div");
+    const el = document.createElement("p");
 
-      wrapper.classList.add("wrapper");
-      colorBox.classList.add("color-box");
-      pWrapper.classList.add("p-wrapper");
-      el.classList.add("el");
+    wrapper.classList.add("wrapper");
+    colorBox.classList.add("color-box");
+    pWrapper.classList.add("p-wrapper");
+    el.classList.add("el");
 
-      if (hex) {
-        colorBox.style.backgroundColor = hex + color;
-      }
+    // if a user chooses to generate colors with a hex that has no # we need to add that back when setting the color
+    if (shouldAddHashToColorValue) {
+      colorBox.style.backgroundColor = `#${color}`;
+    } else {
       colorBox.style.backgroundColor = color;
-      el.textContent = color;
+    }
 
-      wrapper.addEventListener("click", () => {
-        const toolTipWrapper = document.createElement("div");
-        const toolTipText = document.createElement("p");
+    el.textContent = color;
 
-        toolTipText.textContent = "Copied!";
+    wrapper.addEventListener("click", () => {
+      const toolTipWrapper = document.createElement("div");
+      const toolTipText = document.createElement("p");
 
-        if (index === 0) {
-          toolTipWrapper.classList.add("tool-tip-wrapper-bottom");
-          toolTipText.classList.add("tool-tip-text-bottom");
-        } else {
-          toolTipWrapper.classList.add("tool-tip-wrapper");
-          toolTipText.classList.add("tool-tip-text");
-        }
+      toolTipText.textContent = "Copied!";
 
-        toolTipWrapper.appendChild(toolTipText);
-        wrapper.appendChild(toolTipWrapper);
+      if (index === 0) {
+        toolTipWrapper.classList.add("tool-tip-wrapper-bottom");
+        toolTipText.classList.add("tool-tip-text-bottom");
+      } else {
+        toolTipWrapper.classList.add("tool-tip-wrapper");
+        toolTipText.classList.add("tool-tip-text");
+      }
 
-        copyToClipboard(color);
-        toolTipText.style.visibility = "visible";
-        toolTipText.style.opacity = "1";
+      toolTipWrapper.appendChild(toolTipText);
+      wrapper.appendChild(toolTipWrapper);
 
+      copyToClipboard(color);
+      toolTipText.style.visibility = "visible";
+      toolTipText.style.opacity = "1";
+
+      setTimeout(() => {
+        toolTipText.classList.add("tool-tip-text__fade-out");
         setTimeout(() => {
-          toolTipText.classList.add("tool-tip-text__fade-out");
-          setTimeout(() => {
-            toolTipWrapper.remove();
-          }, 500);
-        }, 700);
-      });
-
-      document.querySelector(".popup-container").appendChild(wrapper);
-
-      pWrapper.appendChild(el);
-      wrapper.appendChild(pWrapper);
-      wrapper.appendChild(colorBox);
+          toolTipWrapper.remove();
+        }, 500);
+      }, 700);
     });
-  };
 
-  // Check if no settings have been set, default to rgb
-  chrome.storage.sync.get(["rgb"], (result) => {
-    if (result.rgb !== true) {
-      chrome.storage.sync.get(["hex"], (result2) => {
-        if (result2.hex !== true) {
-          chrome.storage.sync.get(["hex2"], (result3) => {
-            if (result3.hex2 !== true) {
-              if (colorArr) {
-                generateColors();
-                chrome.storage.sync.set({ colors: JSON.stringify(colorArr) });
+    document.querySelector(".popup-container").appendChild(wrapper);
 
-                const checkbox = document.querySelector('input[name="option1"]');
-                checkbox.disabled = true;
-                checkbox.checked = true;
-              }
-            }
-          });
+    pWrapper.appendChild(el);
+    wrapper.appendChild(pWrapper);
+    wrapper.appendChild(colorBox);
+  });
+};
+
+const storeAndGenerateColorList = (colorArr) => {
+  chrome.storage.sync.get("themifySettings", ({ themifySettings }) => {
+    if (colorArr) {
+      colorArr.forEach((color, index) => {
+        const isColorRGBA = isRGBA(color);
+        let shouldAddHashToColorValue = false;
+
+        if (themifySettings.selectedColorType === "hex") {
+          const finalColorValue = isColorRGBA ? RGBAToHexA(color) : RGBToHex(color);
+          colorArr[index] = finalColorValue;
         }
+
+        if (themifySettings.selectedColorType === "hex2") {
+          const finalColorValue = isColorRGBA ? RGBAToHexA(color) : RGBToHex(color);
+          colorArr[index] = finalColorValue.substring(1);
+          shouldAddHashToColorValue = true;
+        }
+
+        generateColorList(colorArr, shouldAddHashToColorValue);
+        chrome.storage.sync.set({ colors: JSON.stringify(colorArr) });
       });
-    }
-  });
-
-  chrome.storage.sync.get(["rgb"], (result) => {
-    if (result.rgb === true) {
-      if (colorArr) {
-        generateColors();
-        chrome.storage.sync.set({ colors: JSON.stringify(colorArr) });
-      }
-    }
-  });
-
-  chrome.storage.sync.get(["hex"], (result) => {
-    if (result.hex === true) {
-      if (colorArr) {
-        colorArr.forEach((color, index) => {
-          const rgba = checkColorValue(color);
-          if (rgba === "rgba") {
-            colorArr[index] = RGBAToHexA(color);
-          } else {
-            colorArr[index] = RGBToHex(color);
-          }
-        });
-
-        generateColors();
-        chrome.storage.sync.set({ colors: JSON.stringify(colorArr) });
-      }
-    }
-  });
-
-  chrome.storage.sync.get(["hex2"], (result) => {
-    if (result.hex2 === true) {
-      if (colorArr) {
-        colorArr.forEach((color, index) => {
-          const rgba = checkColorValue(color);
-          if (rgba === "rgba") {
-            colorArr[index] = RGBAToHexA(color).substring(1);
-          } else {
-            colorArr[index] = RGBToHex(color).substring(1);
-          }
-        });
-
-        generateColors("#");
-        chrome.storage.sync.set({ colors: JSON.stringify(colorArr) });
-      }
     }
   });
 };
 
-let getColors = () => {
+const getColors = () => {
   chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tab) => {
-    chrome.tabs.sendMessage(tab[0].id, "ready", (response) => {
+    chrome.tabs.sendMessage(tab[0].id, "colors", (response) => {
       if (!window.chrome.runtime.lastError) {
         document.querySelector(".context-menu-icon").style.display = "block";
         if (response) {
           let colorArr = JSON.parse(response);
-          checkSetting(colorArr);
+          storeAndGenerateColorList(colorArr);
         }
       } else {
         document.querySelector(".popup-container").textContent = "";
@@ -254,113 +183,41 @@ let getColors = () => {
 
 window.onload = getColors();
 
-checkCheckbox = () => {
-  chrome.storage.sync.get(["rgb"], (result) => {
-    if (result.rgb === true) {
-      document.querySelector('input[name="option1"]').checked = true;
-      document.querySelector('input[name="option1"]').disabled = true;
-    } else {
-      document.querySelector('input[name="option1"]').checked = false;
-      document.querySelector('input[name="option1"]').disabled = false;
-    }
-  });
+// configure the settings menu on load
+chrome.storage.sync.get("themifySettings", ({ themifySettings }) => {
+  document.querySelector(`input[name=${themifySettings.selectedColorType ?? "rgb"}]`).checked = true;
+  document.querySelector(`input[name=${themifySettings.selectedColorType ?? "rgb"}]`).disabled = true;
+});
 
-  chrome.storage.sync.get(["hex"], (result) => {
-    if (result.hex === true) {
-      document.querySelector('input[name="option2"]').checked = true;
-      document.querySelector('input[name="option2"]').disabled = true;
-    } else {
-      document.querySelector('input[name="option2"]').checked = false;
-      document.querySelector('input[name="option2"]').disabled = false;
-    }
-  });
+// listeners
+document.querySelector(".context-menu-icon").addEventListener("click", (e) => {
+  document.querySelector(".slide-menu").classList.toggle("show");
+  document.querySelector(".menu-overlay").classList.toggle("show-overlay");
+});
 
-  chrome.storage.sync.get(["hex2"], (result) => {
-    if (result.hex2 === true) {
-      document.querySelector('input[name="option3"]').checked = true;
-      document.querySelector('input[name="option3"]').disabled = true;
-    } else {
-      document.querySelector('input[name="option3"]').checked = false;
-      document.querySelector('input[name="option3"]').disabled = false;
-    }
-  });
-};
-
-let slideMenu = () => {
-  document.querySelector(".context-menu-icon").addEventListener("click", (e) => {
-    document.querySelector(".slide-menu").classList.toggle("show");
-    document.querySelector(".menu-overlay").classList.toggle("show-overlay");
-  });
-  checkCheckbox();
-};
-
-slideMenu();
-
-// EYE DROPPER LISTENER
-document.querySelector(".eye-dropper-container").addEventListener("click", (e) => {
+document.querySelector(".eye-dropper-container").addEventListener("click", async (e) => {
   if (!window.EyeDropper) {
     alert("your browser does not support this feature");
     return;
   }
-  chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tab) => {
-    chrome.tabs.sendMessage(tab[0].id, "eyedropper", (response) => {
-      if (!window.chrome.runtime.lastError) {
-        if (response) {
-          console.log("response", response);
-          const success = document.querySelector(".eye-success");
-          success.style.display = "block";
 
-          setTimeout(() => {
-            success.style.display = "none";
-          }, 1000);
-        }
-      }
-    });
-  });
+  const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+  chrome.tabs.sendMessage(tab.id, "eyedropper");
 });
 
-const updateColors = () => {
-  chrome.storage.sync.get(["colors"], (result) => {
-    if (result.colors) {
-      let colorArr = JSON.parse(result.colors);
-    }
-  });
-};
-
-const checkboxDisable = () => {
-  const allInputes = document.querySelectorAll("input");
-  allInputes.forEach((checkbox) => {
-    checkbox.addEventListener("click", (e) => {
-      if (e.target.name === "option1") {
-        setting.rgb = true;
-      } else {
-        setting.rgb = false;
-      }
-
-      if (e.target.name === "option2") {
-        setting.hex = true;
-      } else {
-        setting.hex = false;
-      }
-
-      if (e.target.name === "option3") {
-        setting.hex2 = true;
-      } else {
-        setting.hex2 = false;
-      }
-      setSetting(setting);
-      if (checkbox.checked === true) {
-        allInputes.forEach((enable) => {
-          enable.disabled = false;
-          enable.checked = false;
-        });
-
-        checkbox.disabled = true;
-        checkbox.checked = true;
-      }
-      location.reload();
+const allInputs = document.querySelectorAll("input");
+allInputs.forEach((checkbox) => {
+  checkbox.addEventListener("click", async (e) => {
+    // remove old state
+    allInputs.forEach((checkbox) => {
+      checkbox.checked = false;
+      checkbox.disabled = false;
     });
-  });
-};
+    await chrome.storage.sync.set({ themifySettings: { selectedColorType: e.target.name } });
+    e.target.checked = true;
+    e.target.disabled = true;
 
-checkboxDisable();
+    // apply changes to popup
+    location.reload();
+  });
+});
