@@ -73,100 +73,120 @@ const isRGBA = (color) => {
   }
 };
 
-const generateColorList = (colorArr, shouldAddHashToColorValue) => {
-  // clear out the old list
-  document.querySelector(".popup-container").innerHTML = "";
-  // generate the new list
-  colorArr.forEach((color, index) => {
-    const wrapper = document.createElement("div");
-    const colorBox = document.createElement("div");
-    const pWrapper = document.createElement("div");
-    const el = document.createElement("p");
+const generateColor = (color, shouldAddHashToColorValue, index) => {
+  // generate the color
+  const wrapper = document.createElement("div");
+  const colorBox = document.createElement("div");
+  const pWrapper = document.createElement("div");
+  const el = document.createElement("p");
 
-    wrapper.classList.add("wrapper");
-    colorBox.classList.add("color-box");
-    pWrapper.classList.add("p-wrapper");
-    el.classList.add("el");
+  wrapper.classList.add("wrapper");
+  colorBox.classList.add("color-box");
+  pWrapper.classList.add("p-wrapper");
+  el.classList.add("el");
 
-    // if a user chooses to generate colors with a hex that has no # we need to add that back when setting the color
-    if (shouldAddHashToColorValue) {
-      colorBox.style.backgroundColor = `#${color}`;
+  // if a user chooses to generate colors with a hex that has no # we need to add that back when setting the color
+  if (shouldAddHashToColorValue) {
+    colorBox.style.backgroundColor = `#${color}`;
+  } else {
+    colorBox.style.backgroundColor = color;
+  }
+
+  el.textContent = color;
+
+  wrapper.addEventListener("click", () => {
+    const toolTipWrapper = document.createElement("div");
+    const toolTipText = document.createElement("p");
+
+    toolTipText.textContent = "Copied!";
+
+    if (index === 0) {
+      toolTipWrapper.classList.add("tool-tip-wrapper-bottom");
+      toolTipText.classList.add("tool-tip-text-bottom");
     } else {
-      colorBox.style.backgroundColor = color;
+      toolTipWrapper.classList.add("tool-tip-wrapper");
+      toolTipText.classList.add("tool-tip-text");
     }
 
-    el.textContent = color;
+    toolTipWrapper.appendChild(toolTipText);
+    wrapper.appendChild(toolTipWrapper);
 
-    wrapper.addEventListener("click", () => {
-      const toolTipWrapper = document.createElement("div");
-      const toolTipText = document.createElement("p");
+    copyToClipboard(color);
+    toolTipText.style.visibility = "visible";
+    toolTipText.style.opacity = "1";
 
-      toolTipText.textContent = "Copied!";
-
-      if (index === 0) {
-        toolTipWrapper.classList.add("tool-tip-wrapper-bottom");
-        toolTipText.classList.add("tool-tip-text-bottom");
-      } else {
-        toolTipWrapper.classList.add("tool-tip-wrapper");
-        toolTipText.classList.add("tool-tip-text");
-      }
-
-      toolTipWrapper.appendChild(toolTipText);
-      wrapper.appendChild(toolTipWrapper);
-
-      copyToClipboard(color);
-      toolTipText.style.visibility = "visible";
-      toolTipText.style.opacity = "1";
-
+    setTimeout(() => {
+      toolTipText.classList.add("tool-tip-text__fade-out");
       setTimeout(() => {
-        toolTipText.classList.add("tool-tip-text__fade-out");
-        setTimeout(() => {
-          toolTipWrapper.remove();
-        }, 500);
-      }, 700);
-    });
-
-    document.querySelector(".popup-container").appendChild(wrapper);
-
-    pWrapper.appendChild(el);
-    wrapper.appendChild(pWrapper);
-    wrapper.appendChild(colorBox);
+        toolTipWrapper.remove();
+      }, 500);
+    }, 700);
   });
+
+  document.querySelector(".popup-container").appendChild(wrapper);
+
+  pWrapper.appendChild(el);
+  wrapper.appendChild(pWrapper);
+  wrapper.appendChild(colorBox);
 };
 
-const storeAndGenerateColorList = (colorArr) => {
-  chrome.storage.sync.get("themifySettings", ({ themifySettings }) => {
+const storeAndGenerateColorList = (colorArr, selectedColorType, shouldPersist = true) => {
+  const generateColorList = (selectedColorType) => {
     if (colorArr) {
+      if (shouldPersist === true) {
+        chrome.storage.sync.set({ colors: JSON.stringify(colorArr) });
+      }
+      // clear out the old list
+      document.querySelector(".popup-container").innerHTML = "";
+      // generate a list item for each color
       colorArr.forEach((color, index) => {
         const isColorRGBA = isRGBA(color);
         let shouldAddHashToColorValue = false;
+        let finalColorValue = color;
 
-        if (themifySettings?.selectedColorType === "hex") {
-          const finalColorValue = isColorRGBA ? RGBAToHexA(color) : RGBToHex(color);
-          colorArr[index] = finalColorValue;
+        if (selectedColorType === "hex") {
+          finalColorValue = isColorRGBA ? RGBAToHexA(color) : RGBToHex(color);
         }
 
-        if (themifySettings?.selectedColorType === "hex2") {
-          const finalColorValue = isColorRGBA ? RGBAToHexA(color) : RGBToHex(color);
-          colorArr[index] = finalColorValue.substring(1);
+        if (selectedColorType === "hex2") {
+          finalColorValue = isColorRGBA ? RGBAToHexA(color) : RGBToHex(color);
+          // remove the hash
+          finalColorValue = finalColorValue.substring(1);
+          // tell the generateColor function to add the hash back for the background color css
           shouldAddHashToColorValue = true;
         }
 
-        generateColorList(colorArr, shouldAddHashToColorValue);
-        chrome.storage.sync.set({ colors: JSON.stringify(colorArr) });
+        generateColor(finalColorValue, shouldAddHashToColorValue, index);
       });
     }
-  });
+  };
+
+  if (selectedColorType) {
+    generateColorList(selectedColorType);
+  } else {
+    chrome.storage.sync.get("themifySettings", ({ themifySettings }) => {
+      generateColorList(themifySettings.selectedColorType);
+    });
+  }
 };
 
+// local state to prevent sending too many messages
+let sessionColors;
+
 const getColors = () => {
+  if (sessionColors) {
+    return sessionColors;
+  }
+
   chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tab) => {
     chrome.tabs.sendMessage(tab[0].id, "colors", (response) => {
       if (!window.chrome.runtime.lastError) {
         document.querySelector(".context-menu-icon").style.display = "block";
         if (response) {
-          let colorArr = JSON.parse(response);
-          storeAndGenerateColorList(colorArr);
+          const colorArr = JSON.parse(response);
+          storeAndGenerateColorList(colorArr, undefined, true);
+          // store the colors so we don't need to fetch them again when the user selects a different setting option
+          sessionColors = colorArr;
         }
       } else {
         document.querySelector(".popup-container").textContent = "";
@@ -181,7 +201,7 @@ const getColors = () => {
   });
 };
 
-window.onload = getColors();
+getColors();
 
 // configure the settings menu on load
 chrome.storage.sync.get("themifySettings", ({ themifySettings }) => {
@@ -205,11 +225,10 @@ document.querySelector(".eye-dropper-container").addEventListener("click", async
   chrome.tabs.sendMessage(tab.id, "eyedropper");
 });
 
-const allInputs = document.querySelectorAll("input");
-allInputs.forEach((checkbox) => {
+document.querySelectorAll("input").forEach((checkbox) => {
   checkbox.addEventListener("click", async (e) => {
     // remove old state
-    allInputs.forEach((checkbox) => {
+    document.querySelectorAll("input").forEach((checkbox) => {
       checkbox.checked = false;
       checkbox.disabled = false;
     });
@@ -217,7 +236,7 @@ allInputs.forEach((checkbox) => {
     e.target.checked = true;
     e.target.disabled = true;
 
-    // apply changes to popup
-    location.reload();
+    colors = getColors();
+    storeAndGenerateColorList(colors, e.target.name, false);
   });
 });
