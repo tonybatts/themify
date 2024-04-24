@@ -165,7 +165,7 @@ const storeAndGenerateColorList = (colorArr, selectedColorType, shouldPersist = 
     generateColorList(selectedColorType);
   } else {
     chrome.storage.sync.get("themifySettings", ({ themifySettings }) => {
-      generateColorList(themifySettings.selectedColorType);
+      generateColorList(themifySettings?.selectedColorType ?? "rgb");
     });
   }
 };
